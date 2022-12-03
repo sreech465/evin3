@@ -1,0 +1,46 @@
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { getProjectDetails } from "./Actions";
+
+const Details = () => {
+  const dispatch = useDispatch();
+
+  const access_token = useSelector(
+    (state) => state.LoginReducer.auth.access_token
+  );
+  console.log(access_token);
+
+  const ProjectList = useSelector((state) => state.ProjectReducer.Data100);
+  console.log(ProjectList.data.results);
+
+  useEffect(() => {
+    dispatch(getProjectDetails(access_token));
+  }, []);
+
+  return ProjectList ? (
+    <>
+      {ProjectList &&
+        ProjectList.data.results.length > 0 &&
+        ProjectList.data.results.map((element) => {
+          return (
+            <>
+              <div class="card">
+                <div class="card-body">
+                  <p>
+                    {element.name} {element.customer_org_name}
+                  </p>
+                  <p>
+                    {element.po_number} {element.project_id}
+                  </p>
+                </div>
+              </div>
+            </>
+          );
+        })}
+    </>
+  ) : (
+    "loading"
+  );
+};
+
+export default Details;
